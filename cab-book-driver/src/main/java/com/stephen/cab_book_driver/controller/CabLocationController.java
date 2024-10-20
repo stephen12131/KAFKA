@@ -15,19 +15,25 @@ import com.stephen.cab_book_driver.service.CabLocationService;
 @RequestMapping("/location")
 public class CabLocationController {
 	@Autowired
-	private CabLocationService  cabLocationService;
-	
+	private CabLocationService cabLocationService;
+
 	@PutMapping
-	public ResponseEntity<?> updateLocation() throws InterruptedException{
+	public ResponseEntity<?> updateLocation() throws InterruptedException {
 		int range = 10;
-		while(range>0) {
-			
-			cabLocationService.updateLocation(Math.random()+ " ,"+ Math.random());	
-			Thread.sleep(1000);
+		while (range > 0) {
+			// Simulating driver location update
+			String driverId = "driver_" + range;
+			String latitude = String.valueOf(Math.random() * 90); // Random latitude between 0 and 90
+			String longitude = String.valueOf(Math.random() * 180); // Random longitude between 0 and 180
+			String status = "ACTIVE";
+
+			// Send driver object to Kafka
+			cabLocationService.updateLocation(driverId, latitude, longitude, status);
+
+			Thread.sleep(1000); // Simulate delay between location updates
 			range--;
 		}
-		return new ResponseEntity<>(Map.of("message","Location updated"),HttpStatus.OK);
-		
+		return new ResponseEntity<>(Map.of("message", "Driver locations updated"), HttpStatus.OK);
 	}
 
 }
